@@ -36,6 +36,7 @@ struct Keyword asKeywordList[MAX_KEYWORD_NR]=
 };
 
 
+
 enum Result {OK, ERROR};
 enum CompResult {DIFFERENT,EQUAL};
 enum Result eResult;
