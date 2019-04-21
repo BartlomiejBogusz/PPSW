@@ -1,4 +1,3 @@
-#include <LPC21xx.H>
 #include "led.h"
 #include "keyboard.h"
 
@@ -14,11 +13,13 @@ int main()
 	LedInit();
 	while(1){
 		switch(eKeyboardRead()){
-			case BUTTON_1:
+			case (BUTTON_1):
 				LedStepRight();
 				break;
-			case BUTTON_2:
+			case (BUTTON_2):
 				LedStepLeft();
+				break;
+			default:
 				break;
 		}
 		Delay(200);
