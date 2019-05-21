@@ -1,9 +1,27 @@
+#include <LPC21xx.H>
 #include "timer_interrupts.h"
 #include "led.h"
 #include "keyboard.h"
 
-	enum LedState{LED_LEFT, LED_RIGHT, LED_STOP};
-	enum LedState eLedState = LED_STOP;
+#define DETECTOR_bm (1<<10)
+
+	enum LedState{LED_LEFT, LED_RIGHT, LED_STOP, CALLIB};
+	enum LedState eLedState = CALLIB;
+	enum DetectorState{ACTIVE, INACTIVE};
+	
+void DetectorInit(){
+	IO0DIR = IO0DIR &(~DETECTOR_bm);
+}
+
+enum DetectorState eReadDetector(){
+	
+	if((IO0PIN & DETECTOR_bm) == 0){
+		return ACTIVE;
+	}
+	else{
+		return INACTIVE;
+	}
+}
 
 void Automat(){
 	
@@ -32,6 +50,14 @@ void Automat(){
 					LedStepLeft();
 				}
 				break;
+			case CALLIB:
+				if(eReadDetector() == INACTIVE){
+					LedStepLeft();
+				}
+				else{
+					eLedState = LED_STOP;
+				}
+				break;
 		}
 }
 
@@ -39,7 +65,8 @@ int main (){
 	unsigned int iMainLoopCtr;
 	LedInit();
 	KeyboardInit();
-	Timer1Interrupts_Init(20000, &Automat);
+	DetectorInit();
+	Timer1Interrupts_Init(5, &Automat);
 	while(1){
 	 	iMainLoopCtr++;
 	}
