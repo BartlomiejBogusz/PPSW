@@ -5,6 +5,9 @@ int main (){
 	KeyboardInit();
 	DetectorInit();
 	ServoInit(50);
+	ServoGoTo(24);
+	ServoGoTo(12);
+	ServoCallib();
 	while(1){
 	 	switch(eKeyboardRead()){
 			case BUTTON_0:

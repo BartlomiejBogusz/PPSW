@@ -23,11 +23,13 @@ enum DetectorState eReadDetector(void){
 
 void ServoCallib(void){
 	sServo.eState = CALLIB;
+	while(sServo.eState != IDLE){}
 }
 
 void ServoGoTo(unsigned int uiPosition){
 	sServo.eState = IN_PROGRESS;
 	sServo.uiDesiredPosition = uiPosition;
+	while(sServo.eState != IDLE){}
 }
 
 void Automat(void){
@@ -35,7 +37,7 @@ void Automat(void){
 		switch(sServo.eState){
 			case CALLIB:
 				if(eReadDetector() == INACTIVE){
-					LedStepLeft();
+					LedStepRight();
 				}
 				else{
 					sServo.uiCurrentPosition = 0;
@@ -69,7 +71,7 @@ void Automat(void){
 }
 
 void ServoInit(unsigned int uiServoFrequency){
-	ServoCallib();
-	LedInit();
 	Timer1Interrupts_Init((1000000/uiServoFrequency), &Automat);
+	LedInit();
+	ServoCallib();
 }
